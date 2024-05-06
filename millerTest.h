@@ -1,7 +1,8 @@
+#pragma once
 #include <iostream>
 
 // calculate (n^exp) % mod
-long long int mod_pow(long long int n, long long int exp, long long int mod)
+inline long long int mod_pow(long long int n, long long int exp, long long int mod)
 {
     long long int res = 1;
     while (exp > 0)
@@ -15,7 +16,7 @@ long long int mod_pow(long long int n, long long int exp, long long int mod)
 
 // returns false if n is composite and returns true if n is probably prime
 // d is an odd number
-bool millerTest(long long int d, long long int n)
+inline bool millerTest(long long int d, long long int n)
 {
     // pick a random number in [2..n-2]
     long long int a = 2 + std::rand() % (n - 4);
@@ -39,7 +40,7 @@ bool millerTest(long long int d, long long int n)
 }
 
 // returns false if n is composite and returns true if n is probably prime
-bool isPrimeMiller(long long int n, long long int k)
+inline bool isPrimeMiller(long long int n, long long int k)
 {
     // corner cases
     if (n <= 1 || n == 4)  return false;

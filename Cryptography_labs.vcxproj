@@ -131,7 +131,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaillieTest.cpp" />
+    <ClInclude Include="baillieTest.h" />
     <ClInclude Include="functions.h" />
     <ClInclude Include="millerTest.h" />
   </ItemGroup>
