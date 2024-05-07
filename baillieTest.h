@@ -1,10 +1,11 @@
+#pragma once
 #include "millerTest.h"
 
-long long generateRandom(long long range) {
+inline long long generateRandom(long long range) {
     return rand() % range;
 }
 
-bool isPrimeBaillie(long long n, int iteration) {
+inline bool isPrimeBaillie(long long n, int iteration) {
     if (n == 0 || n == 1)
         return false;
     if (n == 2)

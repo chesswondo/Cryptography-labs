@@ -23,6 +23,10 @@ int main()
             process_task1();
             break;
 
+        case 2:
+            process_task2();
+            break;
+
         default:
             cout << "Incorrect number, retry\n\n";
             break;

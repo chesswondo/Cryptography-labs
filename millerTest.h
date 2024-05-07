@@ -1,19 +1,6 @@
 #pragma once
 #include <iostream>
 
-// calculate (n^exp) % mod
-inline long long int mod_pow(long long int n, long long int exp, long long int mod)
-{
-    long long int res = 1;
-    while (exp > 0)
-    {
-        if (exp % 2) res = (res * n) % mod;
-        exp /= 2;
-        n = (n * n) % mod;
-    }
-    return res;
-}
-
 // returns false if n is composite and returns true if n is probably prime
 // d is an odd number
 inline bool millerTest(long long int d, long long int n)
