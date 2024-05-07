@@ -57,32 +57,40 @@ long long mul_inv(long long a, long long b)
 class RSA
 {
 private:
-    //int k = 5;
+    int bit_length, k;
+    long long p, q, n, lambda, d, e;
+
 public:
-    friend long long carmichael(long long n);
-    friend long long mul_inv(long long a, long long b);
+    RSA(int bit_length = 20, int k = 5)
+    {
+        this->bit_length = bit_length;
+        this->k = k;
+        this->p = generate_prime_number(bit_length, k);
+        this->q = generate_prime_number(bit_length, k);
+        this->n = this->p * this->q;
+        this->lambda = lcm(carmichael(this->q), carmichael(this->p));
+        long long range = this->lambda - 3;
+        long long e;
+        while (true)
+        {
+            long long random_number = rand() % range + 2;
+            if (isPrimeMiller(random_number, 5) && this->lambda % random_number != 0) { e = random_number; break; }
+        }
+        this->e = e;
+        this->d = mul_inv(e, lambda);
+
+        cout << "p = " << p << ", q = " << q << ", n = " << n << endl;
+        cout << "Carmichael(" << n << ") = " << lambda << endl;
+        cout << "e = " << e << endl;
+        cout << "d = " << d << endl;
+    }
+
+    //friend long long carmichael(long long n);
+    //friend long long mul_inv(long long a, long long b);
+    //friend long long generate_prime_number(int, int);
 };
 
 void process_task2()
 {
-    RSA rsa;
-    
-    long long p = generate_prime_number(20, 5);
-    long long q = generate_prime_number(20, 5);
-    long long n = p * q;
-    long long lambda = lcm(carmichael(q), carmichael(p));
-    cout << "p = " << p << ", q = " << q << ", n = " << n << endl;
-    cout << "Carmichael(" << n << ") = " << lambda << endl;
-
-    long long range = lambda - 3;
-    long long e;
-    while (true)
-    {
-        long long random_number = rand() % range + 2;
-        if (isPrimeMiller(random_number, 5) && lambda % random_number != 0) { e = random_number; break; }
-    }
-
-    cout << "e = " << e << endl;
-    long long d = mul_inv(e, lambda);
-    cout << "d = " << d << endl;
+    RSA rsa(23, 4);
 }
