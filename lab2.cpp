@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include<string>
 #include "functions.h"
 #include "millerTest.h"
 
@@ -66,8 +67,12 @@ public:
     {
         this->bit_length = bit_length;
         this->k = k;
-        this->p = generate_prime_number(bit_length, k);
-        this->q = generate_prime_number(bit_length, k);
+        do
+        {
+            this->p = generate_prime_number(bit_length, k);
+            this->q = generate_prime_number(bit_length, k);
+        } while (this->q == this->p);
+        
         this->n = this->p * this->q;
         this->lambda = lcm(carmichael(this->q), carmichael(this->p));
         long long range = this->lambda - 3;
@@ -81,7 +86,7 @@ public:
         this->d = mul_inv(e, lambda);
 
         cout << "p = " << p << ", q = " << q << ", n = " << n << endl;
-        cout << "Carmichael(" << n << ") = " << lambda << endl;
+        cout << "carmichael(" << n << ") = " << lambda << endl;
         cout << "e = " << e << endl;
         cout << "d = " << d << endl;
     }
@@ -116,17 +121,21 @@ public:
 
 void process_task2()
 {
-    RSA rsa(20, 4);
-    vector<long long> message = { 123, 456, 21, 89 };
-    cout << "Message is: ";
-    for (auto s : message) cout << s << " ";
-    cout << endl;
-    vector<long long> enc_message = rsa.encrypt(message);
-    cout << "Encrypted message is: ";
+    RSA rsa(30, 4);
+
+    string message;
+    cout << "Write your message:\n";
+    getline(cin, message);
+    cout << "Message is: " << message;
+    vector<long long> num_message;
+    for (char s : message) num_message.push_back(static_cast<int>(s));
+
+    vector<long long> enc_message = rsa.encrypt(num_message);
+    cout << "\nEncrypted message is: ";
     for (auto s : enc_message) cout << s << " ";
-    cout << endl;
+
     vector<long long> dec_message = rsa.decrypt(enc_message);
-    cout << "Decrypted message is: ";
-    for (auto s : dec_message) cout << s << " ";
+    cout << "\nDecrypted message is: ";
+    for (auto s : dec_message) cout << static_cast<char>(s);
     cout << "\n\n";
 }
