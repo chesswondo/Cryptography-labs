@@ -8,10 +8,10 @@ using namespace std;
 
 long long generate_prime_number(int bit_length, int k)
 {
+    if (bit_length < 4) throw invalid_argument("received too small value of bit length. Cannot generate prime number.");
     bit_length = min(bit_length, 63);
-    int half_bit_length = bit_length / 2;
-    long long min_value = pow(2, half_bit_length - 1);
-    long long max_value = pow(2, half_bit_length) - 1;
+    long long min_value = pow(2, bit_length - 1);
+    long long max_value = pow(2, bit_length) - 1;
     long long range = max_value - min_value;
     while (true)
     {
@@ -22,10 +22,16 @@ long long generate_prime_number(int bit_length, int k)
 
 void process_task1()
 {
-    int k, totalMiller = 0, totalBaillie = 0;
+    int k, totalMiller = 0, totalBaillie = 0, bit_length;
 
     cout << "Enter k (the number of iterates):\n";
     cin >> k;
+    cout << "Enter bit length of prime number to generate:\n";
+    cin >> bit_length;
+    
+    try {
+        cout << "Generated prime number: " << generate_prime_number(bit_length, k) << endl;
+    } catch (exception& e) { cerr << "Exception: " << e.what() << endl; }
 
     // test section
     cout << endl;

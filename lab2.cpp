@@ -70,8 +70,8 @@ public:
         this->k = k;
         do
         {
-            this->p = generate_prime_number(bit_length, k);
-            this->q = generate_prime_number(bit_length, k);
+            this->p = generate_prime_number(bit_length/2, k);
+            this->q = generate_prime_number(bit_length/2, k);
         } while (this->q == this->p);
         
         this->n = this->p * this->q;
@@ -140,6 +140,7 @@ void process_task2()
         // starting timepoint
         auto start = chrono::high_resolution_clock::now();
 
+        cout << "\n\n";
         RSA rsa(bit_length, 10, true);
         vector<long long> num_message;
         for (char s : message) num_message.push_back(static_cast<int>(s));
@@ -183,7 +184,7 @@ void process_task2()
                 average_duration += duration.count();
             }
             average_duration /= 10;
-            cout << "Time taken for " << bl << " bit length: " << average_duration << " microseconds\n";
+            cout << "Average time taken for " << bl << " bit length: " << average_duration << " microseconds\n";
         }
         cout << endl;
     }

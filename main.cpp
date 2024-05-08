@@ -13,7 +13,7 @@ int main()
     int num_task;
     while (true)
     {
-        cout << "Enter the number of task you want to process:\n";
+        cout << "Enter the number of lab you want to process:\n";
         cin >> num_task;
         cin.ignore(100, '\n');
 
