@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
-#include<string>
+#include <string>
+#include <chrono>
 #include "functions.h"
 #include "millerTest.h"
 
@@ -63,7 +64,7 @@ private:
 
 public:
     long long e, n;
-    RSA(int bit_length = 20, int k = 5)
+    RSA(int bit_length = 20, int k = 5, bool print = false)
     {
         this->bit_length = bit_length;
         this->k = k;
@@ -85,10 +86,13 @@ public:
         this->e = e;
         this->d = mul_inv(e, lambda);
 
-        cout << "p = " << p << ", q = " << q << ", n = " << n << endl;
-        cout << "carmichael(" << n << ") = " << lambda << endl;
-        cout << "e = " << e << endl;
-        cout << "d = " << d << endl;
+        if (print)
+        {
+            cout << "p = " << p << ", q = " << q << ", n = " << n << endl;
+            cout << "carmichael(" << n << ") = " << lambda << endl;
+            cout << "e = " << e << endl;
+            cout << "d = " << d << endl;
+        }
     }
 
     vector<long long> encrypt(vector <long long>& msg)
@@ -121,21 +125,66 @@ public:
 
 void process_task2()
 {
-    RSA rsa(30, 4);
+    int bit_length;
+    cout << "Enter bit length of prime numbers to generate (-1 to test execution time depending on different bit lengths):\n";
+    cin >> bit_length;
+    cin.ignore(1024, '\n');
 
     string message;
     cout << "Write your message:\n";
     getline(cin, message);
-    cout << "Message is: " << message;
-    vector<long long> num_message;
-    for (char s : message) num_message.push_back(static_cast<int>(s));
+    cout << "\nMessage is: " << message;
 
-    vector<long long> enc_message = rsa.encrypt(num_message);
-    cout << "\nEncrypted message is: ";
-    for (auto s : enc_message) cout << s << " ";
+    if (bit_length != -1)
+    {
+        // starting timepoint
+        auto start = chrono::high_resolution_clock::now();
 
-    vector<long long> dec_message = rsa.decrypt(enc_message);
-    cout << "\nDecrypted message is: ";
-    for (auto s : dec_message) cout << static_cast<char>(s);
-    cout << "\n\n";
+        RSA rsa(bit_length, 10, true);
+        vector<long long> num_message;
+        for (char s : message) num_message.push_back(static_cast<int>(s));
+
+        vector<long long> enc_message = rsa.encrypt(num_message);
+        vector<long long> dec_message = rsa.decrypt(enc_message);
+
+        // ending timepoint
+        auto stop = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+
+        cout << "\nEncrypted message is: ";
+        for (auto s : enc_message) cout << s << " ";
+        cout << "\nDecrypted message is: ";
+        for (auto s : dec_message) cout << static_cast<char>(s);
+
+        cout << "\nTime taken by algorithm: "
+            << duration.count() << " microseconds\n\n";
+    }
+
+    else
+    {
+        cout << "\n\n";
+        vector <int> bit_lengths = { 10, 15, 20, 25, 30 };
+        for (int bl : bit_lengths)
+        {
+            int average_duration = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                auto start = chrono::high_resolution_clock::now();
+
+                RSA rsa(bl, 10);
+                vector<long long> num_message;
+                for (char s : message) num_message.push_back(static_cast<int>(s));
+
+                vector<long long> enc_message = rsa.encrypt(num_message);
+                vector<long long> dec_message = rsa.decrypt(enc_message);
+
+                auto stop = chrono::high_resolution_clock::now();
+                auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+                average_duration += duration.count();
+            }
+            average_duration /= 10;
+            cout << "Time taken for " << bl << " bit length: " << average_duration << " microseconds\n";
+        }
+        cout << endl;
+    }
 }
