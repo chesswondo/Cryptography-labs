@@ -1,87 +1,123 @@
+#include <iostream>
 #include <vector>
+#include "functions.h"
 
 using namespace std;
+using Integer = long long;
 
-vector<int> prime_factors(long long int a)
+Integer Jacobi(Integer a, Integer b)
 {
-    vector <int> res;
-    for (int i = 2; i * i <= a; i++)
-        while (a % i == 0)
-        {
-            res.push_back(i);
-            a /= i;
-        }
-
-    if (a > 1) res.push_back(a);
-    return res;
+    if (a == 0) return 0;
+    if (a == 1) return 1;
+    if (a < 0)  return (1 - (b & 2)) * Jacobi(-a, b);
+    Integer a1 = a, e = 0;
+    while ((a1 & 1) == 0) a1 >>= 1, ++e;
+    Integer s = ((e & 1) == 0 || (b & 7) == 1 || (b & 7) == 7) ? 1 : -1;
+    if ((b & 3) == 3 && (a1 & 3) == 3) s = -s;
+    if (a1 == 1) return s;
+    return s * Jacobi(b % a1, a1);
 }
 
-// Lezhandro symbol
-int Lezhandro(long long int a, long long int p)
-{
-    if (a % p == 0) return 0;
-    int v = 0;
-    for (int i = 1; i <= (p - 1) / 2; i++)
-        if ((i * a) % p > p / 2) v++;
-
-    return 1 - 2 * (v % 2 == 1);
-}
-
-// Jacobi symbol
-int Jacobi(long long int a, long long int P)
-{
-    int res = 1;
-    for (auto e : prime_factors(P))
-        res *= Lezhandro(a, e);
-
-    return res;
-}
-
-long long generateRandom(long long range) {
+Integer generateRandom(Integer range) {
     return rand() % range;
 }
 
-bool lucas_sequence(int n, int P, int Q) {
-    int U0 = 0, U1 = 1, V0 = 2, V1 = P;
-    int k = 1, D = P * P - 4 * Q;
-    while (k <= n) {
-        if (k == n) return U1 == 0;
-        int U2 = P * U1 - Q * U0, V2 = P * V1 - Q * V0;
-        if (U1 % 2 == 0) U2 %= n;
-        else U2 = (U2 + n) % n;
-        if (V1 % 2 == 0) V2 %= n;
-        else V2 = (V2 + n) % n;
-        U0 = U1; U1 = U2; V0 = V1; V1 = V2;
-        k *= 2;
-        if (k == n) return U1 == 0;
-        if (D == 1) return true;
-        D = (D + D) % n;
-        P = (P * P - 2 * Q) % n;
-        Q = (Q * Q) % n;
-        if (Q < 0) Q += n;
+int D(const Integer& n)
+{
+    for (int d = 5, sign = 1; ; sign = -sign, d += 2)
+    {
+        int dd = d * sign;
+        Integer g = gcd(n, d);
+        if (g > 1) return 0;  //!!! n not prime!
+        if (Jacobi(dd, n) == -1) return dd;
+    }
+}
+
+bool lucas(const Integer& n)
+{
+    if ((int)sqrt(n) * (int)sqrt(n) == n) return false;
+
+    // The trivial cases have been verified by now.
+    // Parameters:
+    Integer dd = D(n), p = 1, q = (p * p - dd) / 4;
+
+    // Decompose n+1 = d*2^s
+    Integer d = n + 1, s = 0;
+    while ((d & 1) == 0)
+    {
+        d >>= 1;
+        ++s;
+    }
+    // lucas algorithm
+
+    Integer u = 1, v = p, u2m = 1, v2m = p, qm = q, qm2 = q * 2, qkd = q;
+    for (Integer mask = 2; mask <= d; mask <<= 1)
+    {
+        u2m = (u2m * v2m) % n;
+        v2m = (v2m * v2m) % n;
+
+        while (v2m < qm2) v2m += n;
+
+        v2m -= qm2;
+        qm = (qm * qm) % n;
+        qm2 = qm * 2;
+
+        if (d & mask) {
+            Integer
+                t1 = (u2m * v) % n,
+                t2 = (v2m * u) % n,
+                t3 = (v2m * v) % n,
+                t4 = (((u2m * u) % n) * dd) % n;
+
+            u = t1 + t2;
+            if (u & 1) u += n;   // odd
+
+            u = (u >> 1) % n;
+
+            v = t3 + t4;
+
+            if (v & 1) v += n;   // odd
+
+            v = (v >> 1) % n;
+
+            qkd = (qkd * qm) % n;
+        }
+    }
+
+    if (u == 0 || v == 0) return true;
+
+    Integer qkd2 = qkd * 2;
+    for (Integer r = 1; r < s; ++r)
+    {
+        v = (v * v) % n - qkd2;
+        while (v < 0) v += n;
+        while (v >= n) v -= n;
+
+        if (v == 0) return true;
+
+        if (r < s - 1)
+        {
+            qkd = (qkd * 1ll * qkd) % n;
+            qkd2 = qkd * 2;
+        }
     }
     return false;
 }
 
-bool isPrimeBaillie(long long n, int iteration)
+bool isPrimeBaillie(Integer n, int iteration)
 {
     if (n == 0 || n == 1)
         return false;
-    if (n == 2)
-        return true;
-    if (n % 2 == 0)
-        return false;
 
-    for (int k = 2, sign = 1; k<iteration+2; k++, sign *= -1)
+    static Integer small_primes[] =
+    { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59 };
+    for (size_t i = 0; i < size(small_primes) && small_primes[i] <= n; ++i)
     {
-        int D = (2*k + 1) * sign;
-        if (Jacobi(D, n) == -1)
-        {
-            int P = 1;
-            int Q = (1 - D) / 4;
-            if (!lucas_sequence(D, P, Q)) return false;
-        }
+        if (n == small_primes[i])      return true;
+        if (n % small_primes[i] == 0) return false;
     }
 
-    return true;
+    if (!isPrimeMiller(n, 2)) return false;
+
+    return lucas(n);
 }

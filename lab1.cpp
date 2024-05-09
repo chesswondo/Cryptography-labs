@@ -3,17 +3,18 @@
 #include "functions.h"
 
 using namespace std;
+using Integer = long long;
 
-long long generate_prime_number(int bit_length, int k)
+Integer generate_prime_number(int bit_length, int k)
 {
     if (bit_length < 4) throw invalid_argument("received too small value of bit length. Cannot generate prime number.");
     bit_length = min(bit_length, 63);
-    long long min_value = pow(2, bit_length - 1);
-    long long max_value = pow(2, bit_length) - 1;
-    long long range = max_value - min_value;
+    Integer min_value = pow(2, bit_length - 1);
+    Integer max_value = pow(2, bit_length) - 1;
+    Integer range = max_value - min_value;
     while (true)
     {
-        long long random_number = rand() % range + min_value;
+        Integer random_number = rand() % range + min_value;
         if (isPrimeMiller(random_number, k)) return random_number;
     }
 }

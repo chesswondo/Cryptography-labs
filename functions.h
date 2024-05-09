@@ -1,17 +1,17 @@
 #pragma once
-#include<vector>
 
-long long int mod_pow(long long int, long long int, long long int);
-long long int gcd(long long int, long long int);
-long long int lcm(long long int, long long int);
-std::vector<int> prime_factors(long long int);
-int Lezhandro(long long int, long long int);
-int Jacobi(long long int, long long int);
-long long generateRandom(long long);
-bool isPrimeBaillie(long long, int);
-bool millerTest(long long int, long long int);
-bool isPrimeMiller(long long int, long long int);
-long long generate_prime_number(int, int);
+using Integer = long long;
+
+Integer mod_pow(Integer, Integer, Integer);
+Integer gcd(Integer, Integer);
+Integer lcm(Integer, Integer);
+Integer Jacobi(Integer, Integer);
+Integer generateRandom(Integer);
+bool isPrimeBaillie(Integer, int);
+bool millerTest(Integer, Integer);
+bool isPrimeMiller(Integer, Integer);
+Integer generate_prime_number(int, int);
+Integer mul_inv(Integer, Integer);
 
 void process_task1();
 void process_task2();

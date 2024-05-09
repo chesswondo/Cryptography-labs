@@ -1,9 +1,11 @@
 #include <iostream>
 
+using Integer = long long;
+
 // calculate (n^exp) % mod
-long long int mod_pow(long long int n, long long int exp, long long int mod)
+Integer mod_pow(Integer n, Integer exp, Integer mod)
 {
-    long long int res = 1;
+    Integer res = 1;
     while (exp > 0)
     {
         if (exp % 2) res = (res * n) % mod;
@@ -13,7 +15,7 @@ long long int mod_pow(long long int n, long long int exp, long long int mod)
     return res;
 }
 
-long long int gcd(long long int a, long long int b)
+Integer gcd(Integer a, Integer b)
 {
     while (a && b)
         if (a < b) b %= a;
@@ -22,7 +24,21 @@ long long int gcd(long long int a, long long int b)
     return a + b;
 }
 
-long long int lcm(long long int a, long long int b)
+Integer lcm(Integer a, Integer b)
 {
     return a / gcd(a, b) * b;
+}
+
+Integer mul_inv(Integer a, Integer b)
+{
+    Integer b0 = b, t, q;
+    Integer x0 = 0, x1 = 1;
+    if (b == 1) return 1;
+    while (a > 1) {
+        q = a / b;
+        t = b, b = a % b, a = t;
+        t = x0, x0 = x1 - q * x0, x1 = t;
+    }
+    if (x1 < 0) x1 += b0;
+    return x1;
 }
