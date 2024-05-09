@@ -1,6 +1,9 @@
 #include <cstdlib>
 #include <iostream>
 #include "functions.h"
+#include <bitset>
+#include <string>
+#include <vector>
 
 using namespace std;
 using Integer = long long;
@@ -29,7 +32,16 @@ void process_task1()
     cin >> bit_length;
     
     try {
-        cout << "Generated prime number: " << generate_prime_number(bit_length, k) << endl;
+        Integer gen_prime = generate_prime_number(bit_length, k);
+        string prime_base2;
+        Integer gen_prime_copy = gen_prime;
+        do {
+            prime_base2 = to_string(gen_prime_copy & 1) + prime_base2;
+        } while (gen_prime_copy >>= 1);
+        cout << "\nGenerated prime number:\n" << "base2: " << prime_base2 << endl;
+        cout << "base10: " << gen_prime << endl;
+        cout << "byte[]: " << static_cast<void*>(&gen_prime) << endl;
+
     } catch (exception& e) { cerr << "Exception: " << e.what() << endl; }
 
     // test section
