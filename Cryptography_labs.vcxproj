@@ -127,14 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="baillieTest.cpp" />
+    <ClCompile Include="functions.cpp" />
     <ClCompile Include="lab1.cpp" />
     <ClCompile Include="lab2.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="millerTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="baillieTest.h" />
     <ClInclude Include="functions.h" />
-    <ClInclude Include="millerTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,8 +1,6 @@
 #include <cstdlib>
 #include <iostream>
 #include "functions.h"
-#include "millerTest.h"
-#include "baillieTest.h"
 
 using namespace std;
 

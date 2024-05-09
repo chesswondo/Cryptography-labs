@@ -1,9 +1,9 @@
-#pragma once
 #include <iostream>
+#include "functions.h"
 
 // returns false if n is composite and returns true if n is probably prime
 // d is an odd number
-inline bool millerTest(long long int d, long long int n)
+bool millerTest(long long int d, long long int n)
 {
     // pick a random number in [2..n-2]
     long long int a = 2 + std::rand() % (n - 4);
@@ -27,7 +27,7 @@ inline bool millerTest(long long int d, long long int n)
 }
 
 // returns false if n is composite and returns true if n is probably prime
-inline bool isPrimeMiller(long long int n, long long int k)
+bool isPrimeMiller(long long int n, long long int k)
 {
     // corner cases
     if (n <= 1 || n == 4)  return false;

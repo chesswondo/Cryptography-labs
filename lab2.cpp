@@ -3,7 +3,6 @@
 #include <string>
 #include <chrono>
 #include "functions.h"
-#include "millerTest.h"
 
 using namespace std;
 
