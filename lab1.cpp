@@ -1,9 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "functions.h"
-#include <bitset>
 #include <string>
-#include <vector>
 
 using namespace std;
 using Integer = long long;
