@@ -104,7 +104,7 @@ bool lucas(const Integer& n)
     return false;
 }
 
-bool isPrimeBaillie(Integer n, int iteration)
+bool isPrimeBaillie(Integer n)
 {
     if (n == 0 || n == 1)
         return false;

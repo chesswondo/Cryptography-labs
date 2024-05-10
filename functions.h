@@ -7,7 +7,7 @@ Integer gcd(Integer, Integer);
 Integer lcm(Integer, Integer);
 Integer Jacobi(Integer, Integer);
 Integer generateRandom(Integer);
-bool isPrimeBaillie(Integer, int);
+bool isPrimeBaillie(Integer);
 bool millerTest(Integer, Integer);
 bool isPrimeMiller(Integer, Integer);
 Integer generate_prime_number(int, int);

@@ -5,8 +5,25 @@
 #include <iomanip>
 #include "functions.h"
 
+// for tests
+#define IS_TRUE(x) { cout << __FUNCTION__ << " " << ((x) ? "passed" : "failed") << " on line " << __LINE__ << endl; }
+
 using namespace std;
 using Integer = long long;
+
+void testMiller(int k)
+{
+    IS_TRUE(isPrimeMiller(93553, k));
+    IS_TRUE(!isPrimeMiller(14685, k));
+    IS_TRUE(isPrimeMiller(81677, k));
+}
+
+void testBaillie()
+{
+    IS_TRUE(isPrimeBaillie(93553));
+    IS_TRUE(!isPrimeBaillie(14685));
+    IS_TRUE(isPrimeBaillie(81677));
+}
 
 Integer generate_prime_number(int bit_length, int k)
 {
@@ -96,20 +113,15 @@ void process_task1()
     } catch (exception& e) { cerr << "Exception: " << e.what() << endl; }
 
     // test section
-    cout << endl;
-    (isPrimeMiller(93553, k))  ? cout << "Miller test 1 passed" << endl : cout << "Miller test 1 failed" << endl;
-    (!isPrimeMiller(14685, k)) ? cout << "Miller test 2 passed" << endl : cout << "Miller test 2 failed" << endl;
-    (isPrimeMiller(81677, k))  ? cout << "Miller test 3 passed\n" << endl : cout << "Miller test 3 failed\n" << endl;
-
-    (isPrimeBaillie(93553, k))  ? cout << "Baillie test 1 passed" << endl : cout << "Baillie test 1 failed" << endl;
-    (!isPrimeBaillie(14685, k)) ? cout << "Baillie test 2 passed" << endl : cout << "Baillie test 2 failed" << endl;
-    (isPrimeBaillie(81677, k))  ? cout << "Baillie test 3 passed" << endl : cout << "Baillie test 3 failed" << endl;
+    cout << "\nTests status:\n";
+    testMiller(k);
+    testBaillie();
 
     for (int i = 0; i < 100000; i++)
     {
         if (isPrimeMiller(i, k))
             totalMiller++;
-        if (isPrimeBaillie(i, k))
+        if (isPrimeBaillie(i))
             totalBaillie++;
     }
 
