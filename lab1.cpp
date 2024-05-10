@@ -1,7 +1,9 @@
 #include <cstdlib>
 #include <iostream>
-#include "functions.h"
 #include <string>
+#include <sstream>
+#include <iomanip>
+#include "functions.h"
 
 using namespace std;
 using Integer = long long;
@@ -20,6 +22,55 @@ Integer generate_prime_number(int bit_length, int k)
     }
 }
 
+string base64(unsigned char* f, size_t s)
+{
+    string res;
+    static const unsigned char codes64[] =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    const int PADSYM = 64;
+    for (size_t i = 0; i < s;)
+    {
+        unsigned char src[3] = { 0 };
+        unsigned char dest[4];
+        int gcount = 0;
+        if (i++ < s) { src[0] = *f++; gcount++; }
+        if (i++ < s) { src[1] = *f++; gcount++; }
+        if (i++ < s) { src[2] = *f++; gcount++; }
+        switch (gcount)
+        {
+        case 0:
+            return res; // No symbol
+        case 3:
+            dest[3] = codes64[src[2] & 0x3F];
+            dest[2] = codes64[((src[1] << 2) | (src[2] >> 6)) & 0x3F];
+            break;
+        case 2:
+            dest[3] = codes64[PADSYM];
+            dest[2] = codes64[((src[1] << 2) | (src[2] >> 6)) & 0x3F];
+            break;
+        case 1:
+            dest[2] = dest[3] = codes64[PADSYM];
+            break;
+        default: /*assert(!"illegal gcount")*/;
+        }
+        dest[1] = codes64[((src[0] << 4) | (src[1] >> 4)) & 0x3F];
+        dest[0] = codes64[(src[0] >> 2) & 0x3F];
+        for (int j = 0; j < 4; ++j) res += dest[j];
+    }
+    return res;
+}
+
+string bytes(unsigned char* f, size_t s)
+{
+    ostringstream out;
+    for (int i = 0; i < s; ++i)
+    {
+        out << "0x" << hex << setfill('0') << setw(2) << int(*(f + i));
+        if (i != s - 1) out << " ";
+    }
+    return out.str();
+}
+
 void process_task1()
 {
     int k, totalMiller = 0, totalBaillie = 0, bit_length;
@@ -36,9 +87,11 @@ void process_task1()
         do {
             prime_base2 = to_string(gen_prime_copy & 1) + prime_base2;
         } while (gen_prime_copy >>= 1);
+
         cout << "\nGenerated prime number:\n" << "base2: " << prime_base2 << endl;
         cout << "base10: " << gen_prime << endl;
-        cout << "byte[]: " << static_cast<void*>(&gen_prime) << endl;
+        cout << "base64: " << base64((unsigned char*)&gen_prime, sizeof(gen_prime)) << endl;
+        cout << "byte[]: " << bytes((unsigned char*)&gen_prime, sizeof(gen_prime)) << endl;
 
     } catch (exception& e) { cerr << "Exception: " << e.what() << endl; }
 
