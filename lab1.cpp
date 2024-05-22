@@ -126,7 +126,7 @@ void process_task1()
     }
 
     cout << "\nAll prime numbers Miller test found with k = " << k << " from 1 to 100000:\n" << totalMiller << endl;
-    cout << "\nAll prime numbers Baillie test found with k = " << k << " from 1 to 100000:\n" << totalBaillie << endl;
+    cout << "\nAll prime numbers Baillie test found from 1 to 100000:\n" << totalBaillie << endl;
 
     cout << "\nRight number is 9592\n\n";
 }
